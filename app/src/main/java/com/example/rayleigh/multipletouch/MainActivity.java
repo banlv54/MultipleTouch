@@ -24,8 +24,12 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        img=(ImageView)findViewById(R.id.imageView);
-
+        img = (ImageView)findViewById(R.id.imageView);
+        RelativeLayout main = (RelativeLayout) findViewById(R.id.main);
+//        int headerLayoutHeight = main.get;
+        layoutParams = (RelativeLayout.LayoutParams)img.getLayoutParams();
+//        layoutParams.topMargin = 52;
+        img.setLayoutParams(layoutParams);
         img.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -50,29 +54,28 @@ public class MainActivity extends Activity {
                         Log.d(msg, "Action is DragEvent.ACTION_DRAG_STARTED");
                         int x_cord = (int) event.getX();
                         int y_cord = (int) event.getY();
+                        local_x = x_cord - v.getWidth()/2;
+                        local_y = y_cord -  v.getHeight()/2 - 76;
+                        layoutParams.leftMargin = local_x;
+                        layoutParams.topMargin = local_y;
+                        v.setLayoutParams(layoutParams);
 
-                        Log.d(msg, "View - X-Y" + (int) v.getX() + ", " + (int) v.getY());
+                        Log.d(msg, "View - X-Y " + (int) v.getX() + ", " + (int) v.getY());
                         Log.d(msg, "X-Y" + x_cord + ", " + y_cord);
+                        Log.d(msg, "Local X-Y" + local_x + ", " + local_y);
+
                         // Do nothing
                         break;
 
                     case DragEvent.ACTION_DRAG_ENTERED:
-                        Log.d(msg, "Action is DragEvent.ACTION_DRAG_ENTERED");
-                        x_cord = (int) event.getX();
-                        y_cord = (int) event.getY();
-                        local_x = x_cord - (int) v.getX();
-                        local_y = y_cord - (int) v.getY();
-                        Log.d(msg, "View - X-Y" + (int) v.getX() + ", " + (int) v.getY());
-                        Log.d(msg, "X-Y" + x_cord + ", " + y_cord);
                         break;
 
                     case DragEvent.ACTION_DRAG_EXITED :
-                        Log.d(msg, "Action is DragEvent.ACTION_DRAG_EXITED");
+//                        Log.d(msg, "Action is DragEvent.ACTION_DRAG_EXITED");
                         x_cord = (int) event.getX();
-                        y_cord = (int) event.getY();
-                        layoutParams.leftMargin = (int) v.getX() + (x_cord - local_x);
-                        layoutParams.topMargin = (int) v.getY() + (y_cord - local_y);
-                        Log.d(msg, "View1 - X-Y  " + (int) v.getX() + ", " + (int) v.getY());
+                        y_cord = (int) event.getY() - 76;
+                        layoutParams.leftMargin = x_cord;
+                        layoutParams.topMargin = y_cord;
                         v.setLayoutParams(layoutParams);
                         Log.d(msg, "View2 - X-Y  " + (int) v.getX() + ", " + (int) v.getY());
                         Log.d(msg, "X-Y  " + x_cord + ", " + y_cord);
@@ -81,10 +84,10 @@ public class MainActivity extends Activity {
 
                     case DragEvent.ACTION_DRAG_LOCATION  :
                         Log.d(msg, "Action is DragEvent.ACTION_DRAG_LOCATION");
-                        x_cord = (int) event.getX();
-                        y_cord = (int) event.getY();
-                        layoutParams.leftMargin = (int) v.getX() + (x_cord - local_x);
-                        layoutParams.topMargin = (int) v.getY() + (y_cord - local_y);
+                        x_cord = (int) event.getX() - v.getWidth()/2;
+                        y_cord = (int) event.getY() - v.getHeight()/2;
+                        layoutParams.leftMargin = (int) v.getX() + (x_cord);
+                        layoutParams.topMargin = (int) v.getY() + (y_cord);
                         v.setLayoutParams(layoutParams);
                         v.setAlpha(1);
 
@@ -119,7 +122,7 @@ public class MainActivity extends Activity {
                     View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(img);
 
                     img.startDrag(data, shadowBuilder, img, 0);
-                    v.setAlpha(0);
+//                    v.setAlpha(0);
 //                    img.setVisibility(View.INVISIBLE);
                     return true;
                 }
